@@ -113,14 +113,6 @@ The e-commerce website built using HTML, CSS, Bootstrap, JavaScript, PHP, and My
 Feel free to prioritize and modify this todo list based on the specific requirements and priorities of your e-commerce website.
 
 
-## Admin Panel Template
-
-We utilized the admin panel template from the above repository to build the administrative interface of our e-commerce website. The provided template offered a user-friendly and intuitive design, along with necessary features and functionalities to manage products, orders, and customer information effectively.
-
-We express our gratitude to the contributors of these repositories for their hard work, dedication, and open-source spirit, which greatly contributed to the development of our e-commerce website.
-
-Please note that while we utilized these repositories as a starting point, we have made customizations, enhancements, and added our own code to tailor the website to our specific requirements and design.
-
 # E-commerce Website - Installation Guide
 
 This installation guide will help you set up and run the e-commerce website on your local development environment. The guide assumes you have basic knowledge of web development and have the necessary software installed.
