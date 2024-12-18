@@ -112,10 +112,6 @@ The e-commerce website built using HTML, CSS, Bootstrap, JavaScript, PHP, and My
 
 Feel free to prioritize and modify this todo list based on the specific requirements and priorities of your e-commerce website.
 
-# E-commerce Website - Credit Section
-
-We would like to acknowledge the following repositories and their contributors for their valuable contributions to the development of our e-commerce website:
-
 
 ## Admin Panel Template
 
