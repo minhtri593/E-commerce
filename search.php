@@ -198,7 +198,7 @@
 <?php
                 include "includes/config.php"; 
 
-               // Pagination btn using php with active effects 
+               // Search product
 
                 $sql1 = "SELECT * FROM products";
                 $result1 = mysqli_query($conn, $sql1) or die("Query Failed.");
