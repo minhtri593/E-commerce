@@ -41,7 +41,7 @@ $top_rated_products2 = get_top_rated_products();
 <!--
     - NOTIFICATION TOAST
   -->
-
+  
 <div class="notification-toast" data-toast>
   <button class="toast-close-btn" data-toast-close>
     <ion-icon name="close-outline"></ion-icon>
@@ -126,7 +126,7 @@ $top_rated_products2 = get_top_rated_products();
   <!--
       - CATEGORY: Bar 
     -->
-
+    <!-- Display category -->
   <div class="category">
     <div class="container">
       <div class="category-item-container has-scrollbar">
