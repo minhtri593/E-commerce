@@ -19,6 +19,7 @@ $items = get_items_by_category_items($category_ID);
 <!--
     - HEADER
   -->
+  
 <header>
   <!-- top head action, search etc in php -->
   <!-- inc/topheadactions.php -->
@@ -37,7 +38,7 @@ $items = get_items_by_category_items($category_ID);
   -->
 
 <main>
-
+  <!-- product -->
   <div class="product-container">
     <div class="container">
       <!--
