@@ -30,7 +30,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     echo json_encode(['success' => true, 'total' => $totalPrice]);
     exit;
 }
+if (isset($_POST['id']) && isset($_SESSION['mycart'])) {
+  $productId = $_POST['id'];
 
+  // Check if the product exists in the cart and remove it
+  if (isset($_SESSION['mycart'][$productId])) {
+      unset($_SESSION['mycart'][$productId]);
+      echo 'Product removed'; // Optionally send a message back
+  } else {
+      echo 'Product not found'; // Handle error if product doesn't exist
+  }
+  exit(); // Stop further script execution after handling the request
+}
 
 ?>
 <?php include_once('./includes/headerNav.php'); ?>
@@ -83,11 +94,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             <div class="qty-buttons">
               <button class="update-qty" data-action="decrease" data-id="<?php echo $key; ?>">-</button>
               <span class="qty"><?php echo $value['product_qty']; ?></span>
-              <button class="update-qty" data-action="increase" data-id="<?php echo $key; ?>">+</button>
+              <button class="update-qty" data-action="increase" data-id="<?php echo $key; ?>">+</button> 
             </div>
           </td>
           <td>
-            <a href="remove_from_cart.php?id=<?php echo $key; ?>" class="delete-icon">Remove</a>
+            <button class="remove-btn" data-id="<?php echo $key; ?>"><i class="fas fa-trash"></i></button> 
           </td>
         </tr>
         <?php
@@ -162,8 +173,29 @@ document.addEventListener('DOMContentLoaded', function() {
       .catch(error => console.error('Error:', error));
     });
   });
+  document.querySelector('.container').addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('remove-btn')) {
+        var productId = e.target.getAttribute('data-id'); // Get the product ID from the button's data-id
+
+        // Send AJAX request to remove the product from session
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '', true); // Send the request to the same file (cart.php)
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                // If removal was successful, remove the row from the table
+                var productRow = document.getElementById('product-' + productId);
+                productRow.parentNode.removeChild(productRow); // Remove the product row from the table
+            } else {
+                alert('Error removing item');
+            }
+        };
+        xhr.send('id=' + productId); // Send product ID to the server for removal
+    }
+});
 });
 </script>
+
 <style>
 
 :root {
@@ -183,12 +215,30 @@ td img {
   margin-left: auto;
   margin-right: auto;
 }
-
 .delete-icon {
   color: var(--main-maroon); 
   cursor: pointer; 
 }
+.remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--main-maroon);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 5px;
+}
 
+.remove-btn i {
+  font-size: 20px; /* Adjust size of the trash icon */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .qty-buttons {
   display: flex;
   align-items: center;
