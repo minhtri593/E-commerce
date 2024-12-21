@@ -1,3 +1,39 @@
+
+<?php
+session_start();
+
+// Kiểm tra nếu có yêu cầu từ AJAX để cập nhật giỏ hàng
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    $action = $_POST['action'];
+    $productId = $_POST['id'];
+
+    // Kiểm tra nếu giỏ hàng đã tồn tại
+    if (isset($_SESSION['mycart'][$productId])) {
+        $product = $_SESSION['mycart'][$productId];
+
+        if ($action === 'increase') {
+            $product['product_qty']++;
+        } elseif ($action === 'decrease' && $product['product_qty'] > 1) {
+            $product['product_qty']--;
+        }
+
+        // Cập nhật lại sản phẩm trong giỏ hàng
+        $_SESSION['mycart'][$productId] = $product;
+    }
+
+    // Tính toán lại tổng giá trị giỏ hàng
+    $totalPrice = 0;
+    foreach ($_SESSION['mycart'] as $item) {
+        $totalPrice += $item['price'] * $item['product_qty'];
+    }
+
+    // Trả về kết quả dưới dạng JSON
+    echo json_encode(['success' => true, 'total' => $totalPrice]);
+    exit;
+}
+
+
+?>
 <?php include_once('./includes/headerNav.php'); ?>
 
 <div class="overlay" data-overlay></div>
@@ -75,85 +111,113 @@
     - MAIN
   -->
 
+<!-- Giỏ hàng -->
 <main>
-  <!-- product -->
-    <div class="product-container">
-        <div class="container">
-            <!--
-                - SIDEBAR
-           -->
+  <div class="product-container">
+    <div class="container">
+      <table>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Action</th>
+        </tr>
+        <?php
+        if (isset($_SESSION['mycart'])) {
+            foreach ($_SESSION['mycart'] as $key => $value) {
+        ?>
+        <tr>
+          <td>
+            <img class="cart-product-image" src="./admin/upload/<?php echo $value['product_img']; ?>" alt="">
+          </td>
+          <td><?php echo $value['name']; ?></td>
+          <td><?php echo "$" . $value['price']; ?></td>
+          <td>
+            <button class="update-qty" data-action="decrease" data-id="<?php echo $key; ?>">-</button>
+            <?php echo $value['product_qty']; ?>
+            <button class="update-qty" data-action="increase" data-id="<?php echo $key; ?>">+</button>
+          </td>
+          <td>
+            <a href="remove_from_cart.php?id=<?php echo $key; ?>" class="delete-icon">Remove</a>
+          </td>
+        </tr>
+        <?php
+            }
+        } else {
+        ?>
+        <tr>
+          <td colspan="5">No item available in cart</td>
+        </tr>
+        <?php
+        }
+        ?>
+      </table>
 
+      <!-- Hiển thị tổng giá trị giỏ hàng -->
+      <?php
+      if (isset($_SESSION['mycart'])) {
+          $totalPrice = 0;
+          foreach ($_SESSION['mycart'] as $item) {
+              $totalPrice += $item['price'] * $item['product_qty'];
+          }
+      ?>
+      <div class="total-price">
+        <p>Total Price: $<?php echo number_format($totalPrice, 2); ?></p>
+      </div>
+      <?php
+      }
+      ?>
 
-           <table>
-  <tr>
-    <th>Image</th>
-    <th>Name</th>
-    <th>Price</th>
-    <th>Quantity</th>
-  </tr>
-  <?php
+      <!-- Nút Checkout -->
+      <?php
+      if (isset($_SESSION['mycart'])) {
+      ?>
+      <div class="child-register-btn">
+        <p><a href="checkout.php" style="color:#FFFFFF">Proceed To CheckOut</a></p>
+      </div>
+      <?php
+      }
+      ?>
 
-  if(isset($_SESSION['mycart']))
-  {
-    foreach($_SESSION['mycart'] as $value)
-    {
-  
-  
-    ?>
-    <tr>
-      <td>
-      <img class="cart-product-image" src="./admin/upload/<?php echo $value['product_img'] ?>"  alt="">
-      </td>
-      <td><?php echo  $value['name']; ?></td>
-      <td><?php echo  "$".$value['price']; ?></td>
-      <td ><?php echo $value['product_qty']; ?></td>
-    </tr>
-  
-    <?php
-    }}else
-    {
-
-    
-  
-    ?>
-        <tr >
-      <td colspan='4' >No item available in cart</td>
-    </tr>
-
-    <?php
-    }
-
-    ?>
-
-  
- 
-
-</table>
-
-
-     
-     </div>
-
-           
-        </div>
     </div>
-
-    <?php
-
-if(isset($_SESSION['mycart']))
-            { 
-   ?>
-    <div class="child-register-btn">
-                               
-                               <p > <a href="checkout.php" style="color:#FFFFFF">Proceed To CheckOut</a>
-                                </p>
-                           </div>
-
-                           <?php
-}
-
-                           ?>
+  </div>
 </main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const updateQtyButtons = document.querySelectorAll('.update-qty');
+
+  updateQtyButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const action = this.dataset.action;  // "increase" or "decrease"
+      const productId = this.dataset.id;   // The index of the product in the session
+
+      // Tạo đối tượng FormData để gửi dữ liệu
+      const formData = new FormData();
+      formData.append('action', action);
+      formData.append('id', productId);
+
+      // Gửi yêu cầu AJAX để cập nhật giỏ hàng
+      fetch('cart.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Cập nhật lại tổng giá trị giỏ hàng
+        if (data.success) {
+          document.querySelector('.total-price p').textContent = 'Total Price: $' + data.total.toFixed(2);
+          location.reload();  // Tải lại trang để cập nhật giỏ hàng
+        } else {
+          alert('Error updating cart');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  });
+});
+</script>
+
 
 
 <?php require_once './includes/footer.php'; ?>
