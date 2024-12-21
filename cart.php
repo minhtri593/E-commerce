@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -52,61 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
   <!-- inc/mobilenav.php -->
   <?php require_once './includes/mobilenav.php'; ?>
 
-<!-- style -->
-    <style>
-      :root{
-         --main-maroon: #CE5959;
-        --deep-maroon: #89375F;
-      }
-      td,th{
-        text-align:center;
-      }
-      td img{
-        margin-left:auto;
-        margin-right:auto;
-      }
-      .delete-icon{
-        color:var(--bittersweet);     
-        cursor: pointer; 
-      }
-  .child-register-btn {
-    margin-top:20px;
-    width:85%;
-    margin-left:auto;
-    margin-right:auto;
-}
-.child-register-btn p {
-  width: 350px;
-  height: 60px;
-  background-color: var( --main-maroon);
-  box-shadow: 0px 0px 4px #615f5f;
-  line-height: 60px;
-  color: #FFFFFF;
-  margin-left: auto;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 19px;
-  font-weight: 600;
-}
-@media screen and (max-width: 794px) {
- 
-  .child-register-btn {
-    margin-top:30px;
-  
-}
- .child-register-btn p {
-   width: 100%;
- }
-}
-
-    </style>
 </header>
-
-
-
-
-
 <!--
     - MAIN
   -->
@@ -115,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 <main>
   <div class="product-container">
     <div class="container">
+      
       <table>
         <tr>
           <th>Image</th>
@@ -134,9 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
           <td><?php echo $value['name']; ?></td>
           <td><?php echo "$" . $value['price']; ?></td>
           <td>
-            <button class="update-qty" data-action="decrease" data-id="<?php echo $key; ?>">-</button>
-            <?php echo $value['product_qty']; ?>
-            <button class="update-qty" data-action="increase" data-id="<?php echo $key; ?>">+</button>
+            <div class="qty-buttons">
+              <button class="update-qty" data-action="decrease" data-id="<?php echo $key; ?>">-</button>
+              <span class="qty"><?php echo $value['product_qty']; ?></span>
+              <button class="update-qty" data-action="increase" data-id="<?php echo $key; ?>">+</button>
+            </div>
           </td>
           <td>
             <a href="remove_from_cart.php?id=<?php echo $key; ?>" class="delete-icon">Remove</a>
@@ -153,34 +101,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
         ?>
       </table>
-
-      <!-- Hiển thị tổng giá trị giỏ hàng -->
-      <?php
-      if (isset($_SESSION['mycart'])) {
-          $totalPrice = 0;
-          foreach ($_SESSION['mycart'] as $item) {
-              $totalPrice += $item['price'] * $item['product_qty'];
-          }
-      ?>
-      <div class="total-price">
-        <p>Total Price: $<?php echo number_format($totalPrice, 2); ?></p>
       </div>
-      <?php
-      }
-      ?>
+      <!-- Hiển thị tổng giá trị giỏ hàng -->
+       
+      <div class="total-price">
+        <?php
+        if (isset($_SESSION['mycart'])) {
+            $totalPrice = 0;
+            foreach ($_SESSION['mycart'] as $item) {
+                $totalPrice += $item['price'] * $item['product_qty'];
+            }
+        ?>
+        <p>Total Price: $<?php echo number_format($totalPrice, 2); ?></p>
+        <?php
+        }
+        ?>
+      </div>
 
       <!-- Nút Checkout -->
-      <?php
-      if (isset($_SESSION['mycart'])) {
-      ?>
       <div class="child-register-btn">
-        <p><a href="checkout.php" style="color:#FFFFFF">Proceed To CheckOut</a></p>
+        <?php
+        if (isset($_SESSION['mycart'])) {
+        ?>
+        <p><a href="checkout.php" style="color:#FFFFFF">Thanh Toán</a></p>
+        <?php
+        }
+        ?>
       </div>
-      <?php
-      }
-      ?>
-
-    </div>
   </div>
 </main>
 <script>
@@ -217,7 +164,100 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+<style>
 
+:root {
+  --main-maroon: #CE5959;
+  --deep-maroon: #89375F;
+}
+.cart-summary {
+  margin-top: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+td, th {
+  text-align: center;
+}
+
+td img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.delete-icon {
+  color: var(--main-maroon); 
+  cursor: pointer; 
+}
+
+.qty-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-buttons button {
+  background-color: var(--main-maroon);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+.qty-buttons .qty {
+  margin: 0 10px;
+  font-size: 18px;
+}
+
+.child-register-btn {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.total-price {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+table {
+  width: 100%; /* Adjust as per your requirement */
+  border-collapse: collapse;
+  text-align: center;
+}
+.child-register-btn p {
+  background-color: var(--main-maroon);
+  box-shadow: 0px 0px 4px #615f5f;
+  line-height: 60px;
+  color: white;
+  width: 350px;
+  height: 60px;
+  margin: 0 auto;
+  border-radius: 8px;
+  font-size: 19px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+@media screen and (max-width: 794px) {
+  table {
+    width: 100%;
+  }
+
+  .child-register-btn {
+    width: 100%;
+  }
+}
+
+.total-price {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+</style>
 
 
 <?php require_once './includes/footer.php'; ?>

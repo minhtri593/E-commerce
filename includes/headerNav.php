@@ -1,4 +1,8 @@
-<?php  session_start();
+<?php  
+	if (session_status() == PHP_SESSION_NONE) {
+		session_start();
+	}
+	
 	include_once 'includes/config.php';
 	//  all functions
 	require_once 'functions/functions.php';
