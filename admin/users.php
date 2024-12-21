@@ -1,13 +1,100 @@
-
 <?php 
-    include_once('./includes/headerNav.php');
     include_once('./includes/restriction.php');
     if(!(isset($_SESSION['logged-in']))){
       header("Location:login.php?unauthorizedAccess");
     }
- ?>
+?>
 
-<h1>Users</h1>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f9f9f9;
+        display: flex; /* Ensure body displays as flex */
+        margin: 0;
+        padding: 0;
+    }
+    .sidebar {
+        height: 100vh;
+        width: 200px;
+        background: #FFF9F3;
+        border-right: 1px solid #f0f0f0;
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 15px;
+        box-sizing: border-box;
+    }
+    .sidebar .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+    .sidebar .brand img {
+        width: 165px;
+        height: 53px;
+        object-fit: cover;
+    }
+    .sidebar .nav-link {
+        color: #8d8d8d;
+        padding: 10px;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+        background: #ffc107;
+        color: #ffffff;
+    }
+    .sidebar .logout {
+        margin-top: auto;
+        text-align: center;
+    }
+    .sidebar .logout a {
+        color: #f2994a;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+    .sidebar .logout a:hover {
+        color: #e67e22;
+    }
+    .content {
+        margin-left: 250px;
+        padding: 20px;
+        flex-grow: 1;
+        box-sizing: border-box;
+    }
+    .table-cont {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="brand">
+            <a href="../index.php" class="text-decoration-none">
+                <img src="../admin/upload/logo.png" alt="Logo">
+            </a>
+        </div>
+        <nav class="nav flex-column">
+            <a href="post.php" class="nav-link"><i class="fas fa-file-alt"></i> Home</a>
+            <a href="post.php" class="nav-link"><i class="fas fa-file-alt"></i> Post</a>
+            <a href="catagory.php" class="nav-link"><i class="fas fa-th-large"></i> Category</a>
+            <a href="users.php" class="nav-link"><i class="fas fa-shopping-cart"></i> Users</a>
+        </nav>
+        <div class="logout">
+            <a href="logout.php?"><i class="fas fa-sign-out-alt"></i> Log out</a>
+        </div>
+    </div>
+  <div class="content">
 <hr>
 <?php
   include "includes/config.php";
@@ -100,19 +187,18 @@ while($row = $result->fetch_assoc()) {
     <nav aria-label="..." style="margin-left: 10px;">
       <ul class="pagination pagination-sm">
 
-
 <?php 
         for($i=1; $i<=$total_page; $i++){
-            //important this is for active effects that denote in which page you are in current position
-            if($page==$i) {
+            // important: this is for active effects that denote in which page you are in the current position
+            if($page == $i) {
                 $active = "active";
             } else {
                 $active = "";
             }
         ?>
         <li class="page-item">
-            <a class="page-link <?php echo $active; // page number ?>" href="users.php?page=<?php echo $i; // page number ?>">
-            <?php echo $i; // page number ?>
+            <a class="page-link <?php echo $active; ?>" href="users.php?page=<?php echo $i; ?>">
+            <?php echo $i; ?>
             </a>
         </li>
         <?php }} ?>

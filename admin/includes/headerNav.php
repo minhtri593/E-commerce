@@ -68,7 +68,7 @@
             </li>
             <li class="nav- text-white">
               <a class="nav-link active text-white" href="catagory.php">
-                <h6>Catagory</h6>
+                <h6>Category</h6>
               </a>
             </li>
             <li class="nav-item">
