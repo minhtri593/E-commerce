@@ -1,4 +1,4 @@
-# E-commerce WebsiteSSS
+# E-commerce Website
 ## Introduction
 
 This document provides an overview of an e-commerce website built using HTML, CSS, Bootstrap, JavaScript, PHP, and MySQL. The website consists of both user-side and admin-side functionalities, allowing customers to browse and purchase products while enabling administrators to manage inventory, orders, and customer data.
