@@ -14,8 +14,8 @@
     require_once "models/PostModel.php";
     require_once "models/AddressModel.php";
     define('BASE_URL', 'index.php?url=');
-    define('URL_MOMO', 'http://localhost/DUAN1_BOOKSTORE/cam-on');
-    define('URL_ORDER', 'http://localhost/DUAN1_BOOKSTORE/don-hang');
+    define('URL_MOMO', 'http://localhost/HUTECH_SHOP/cam-on');
+    define('URL_ORDER', 'http://localhost/HUTECH_SHOP/don-hang');
 
     require_once "components/head.php";
     require_once "components/header.php";
