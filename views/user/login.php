@@ -42,7 +42,7 @@
                     }
                 }
     
-                
+            //Sai mật khẩu
             } else {
                 $error = 'Sai tên tài khoản hoặc mật khẩu';
                 $username_tmp = $username;
